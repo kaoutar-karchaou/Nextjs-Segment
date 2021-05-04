@@ -1,5 +1,5 @@
-import React from 'react'
-import Link from 'next/link'
+import React from "react";
+import Link from "next/link";
 
 export default function Header() {
   return (
@@ -21,8 +21,13 @@ export default function Header() {
               <a>Contact</a>
             </Link>
           </li>
+          <li>
+            <Link href="/pie">
+              <a>PieChart</a>
+            </Link>
+          </li>
         </ul>
       </nav>
     </header>
-  )
+  );
 }
