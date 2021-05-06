@@ -2,41 +2,47 @@ import React, { useState, useEffect } from "react";
 import ReactLoading from "react-loading";
 import { ResponsivePie } from "@nivo/pie";
 
-const PieChart = (url) => {
+export default function PieChart(url) {
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     getData();
   }, []);
-  const [data, setData] = useState([]);
-  const [flag, setFlag] = useState(true);
-
-  setTimeout(() => {
-    setFlag(false);
-  }, 1500);
 
   const getData = async () => {
-    const response = await fetch("http://localhost:3100/api/data/get");
-    const data = await response.json();
-
-    const objArray = [];
-    let realData = data.series[Object.keys(data.series)[0]];
-    const promise = new Promise((resolve, reject) => {
-      resolve(
-        Object.keys(realData).forEach((key) =>
-          objArray.push({
-            id: key,
-            label: key,
-            value: realData[key].all,
+    setIsLoading(true);
+    try {
+      const response = await fetch("http://localhost:3100/api/data");
+      const data = await response.json();
+      // if (data && data.success && data.data && data.data.series) {
+      if (data?.data?.series) {
+        const seriesData = Object.values(data.data.series)[0];
+        /*
+        id: { all: number },
+        id2: { all: number },
+      */
+        const pieData = Object.keys(seriesData).map((userId) => {
+          return {
+            id: userId,
+            label: userId,
+            value: seriesData[userId].all,
             color: "hsl(350, 70%, 50%)",
-          })
-        )
-      );
-    });
-    promise.then(setData(objArray));
+          };
+        });
+        setData(pieData);
+      } else {
+        setData([]);
+      }
+    } catch (error) {
+      setData([]);
+    }
+    setIsLoading(false);
   };
 
   return (
     <div style={{ height: 500, width: 700, margin: "auto" }}>
-      {flag ? (
+      {isLoading ? (
         <ReactLoading
           type="spinningBubbles"
           color="lightSalmon"
@@ -113,6 +119,4 @@ const PieChart = (url) => {
       )}
     </div>
   );
-};
-
-export default PieChart;
+}
