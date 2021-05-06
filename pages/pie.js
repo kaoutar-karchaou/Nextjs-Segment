@@ -1,46 +1,53 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import ReactLoading from "react-loading";
 import { ResponsivePie } from "@nivo/pie";
 
-class PieChart extends React.Component {
-  state = {
-    data: [
-      {
-        id: "python",
-        label: "python",
-        value: 345,
-        color: "hsl(55, 70%, 50%)",
-      },
-      {
-        id: "lisp",
-        label: "lisp",
-        value: 223,
-        color: "hsl(139, 70%, 50%)",
-      },
-      {
-        id: "c",
-        label: "c",
-        value: 493,
-        color: "hsl(198, 70%, 50%)",
-      },
-      {
-        id: "scala",
-        label: "scala",
-        value: 533,
-        color: "hsl(218, 70%, 50%)",
-      },
-      {
-        id: "hack",
-        label: "hack",
-        value: 516,
-        color: "hsl(39, 70%, 50%)",
-      },
-    ],
+const PieChart = (url) => {
+  useEffect(() => {
+    getData();
+  }, []);
+  const [data, setData] = useState([]);
+  const [flag, setFlag] = useState(true);
+
+  setTimeout(() => {
+    setFlag(false);
+  }, 1500);
+
+  const getData = async () => {
+    const response = await fetch("http://localhost:3100/api/data/get");
+    const data = await response.json();
+
+    const objArray = [];
+    let realData = data.series[Object.keys(data.series)[0]];
+    const promise = new Promise((resolve, reject) => {
+      resolve(
+        Object.keys(realData).forEach((key) =>
+          objArray.push({
+            id: key,
+            label: key,
+            value: realData[key].all,
+            color: "hsl(350, 70%, 50%)",
+          })
+        )
+      );
+    });
+    promise.then(setData(objArray));
   };
-  render() {
-    return (
-      <div style={{ height: 500, width: 500, margin: "auto" }}>
+
+  return (
+    <div style={{ height: 500, width: 700, margin: "auto" }}>
+      {flag ? (
+        <ReactLoading
+          type="spinningBubbles"
+          color="lightSalmon"
+          height={"20%"}
+          width={"20%"}
+          flex={1}
+          marginTop={240}
+        />
+      ) : (
         <ResponsivePie
-          data={this.state.data}
+          data={data}
           margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
           innerRadius={0.45}
           colors={{ scheme: "nivo" }}
@@ -82,56 +89,6 @@ class PieChart extends React.Component {
               spacing: 10,
             },
           ]}
-          fill={[
-            {
-              match: {
-                id: "ruby",
-              },
-              id: "dots",
-            },
-            {
-              match: {
-                id: "c",
-              },
-              id: "dots",
-            },
-            {
-              match: {
-                id: "go",
-              },
-              id: "dots",
-            },
-            {
-              match: {
-                id: "python",
-              },
-              id: "dots",
-            },
-            {
-              match: {
-                id: "scala",
-              },
-              id: "lines",
-            },
-            {
-              match: {
-                id: "lisp",
-              },
-              id: "lines",
-            },
-            {
-              match: {
-                id: "elixir",
-              },
-              id: "lines",
-            },
-            {
-              match: {
-                id: "javascript",
-              },
-              id: "lines",
-            },
-          ]}
           legends={[
             {
               anchor: "bottom",
@@ -153,9 +110,9 @@ class PieChart extends React.Component {
             },
           ]}
         />
-      </div>
-    );
-  }
-}
+      )}
+    </div>
+  );
+};
 
 export default PieChart;
