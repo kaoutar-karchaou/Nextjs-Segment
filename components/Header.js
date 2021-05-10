@@ -26,6 +26,11 @@ export default function Header() {
               <a>PieChart</a>
             </Link>
           </li>
+          <li>
+            <Link href="/users">
+              <a>Userschart</a>
+            </Link>
+          </li>
         </ul>
       </nav>
     </header>

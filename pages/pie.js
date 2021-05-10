@@ -23,10 +23,13 @@ export default function PieChart(url) {
         id2: { all: number },
       */
         const pieData = Object.keys(seriesData).map((userId) => {
+          let val = Object.values(seriesData[userId])[0];
+          // console.log(Object.values(val));
           return {
-            id: userId,
+            id: userId + " /" + Object.keys(seriesData[userId])[0],
             label: userId,
-            value: seriesData[userId].all,
+            email: Object.keys(seriesData[userId])[0],
+            value: Object.values(val),
             color: "hsl(350, 70%, 50%)",
           };
         });
@@ -41,7 +44,7 @@ export default function PieChart(url) {
   };
 
   return (
-    <div style={{ height: 500, width: 700, margin: "auto" }}>
+    <div style={{ height: 500, width: 800, margin: "auto" }}>
       {isLoading ? (
         <ReactLoading
           type="spinningBubbles"
