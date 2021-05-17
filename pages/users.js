@@ -61,7 +61,7 @@ export default function Userschart(url) {
           // marginTop={240}
         />
       ) : (
-        <table>
+        <table className="min-w-full divide-y divide-gray-400">
           <thead>
             <tr>
               <th>user Id</th>

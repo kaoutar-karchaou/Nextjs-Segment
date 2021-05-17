@@ -4,8 +4,8 @@ import Link from "next/link";
 export default function Header() {
   return (
     <header>
-      <nav>
-        <ul>
+      <nav class="bg-indigo-300 p-4 shadow-md">
+        <ul class="flex space-x-4 text-white">
           <li>
             <Link href="/">
               <a>Home</a>

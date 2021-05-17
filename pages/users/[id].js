@@ -1,13 +1,18 @@
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import Activity1 from "../kaou";
+import Activity from "../userActivityInsights";
+
 const Details = () => {
+  const [userId, setUserId] = useState();
   const router = useRouter();
   const { id } = router.query;
-
-  return (
-    <div>
-      <h1>Details page of {id}</h1>
-    </div>
-  );
+  console.log(id);
+  if (id === "ikram4298") {
+    return <Activity />;
+  } else if (id === "kaoutar8426") {
+    return <Activity1 />;
+  }
+  return <div>hello</div>;
 };
-
 export default Details;
